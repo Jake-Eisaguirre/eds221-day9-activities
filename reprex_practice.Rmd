@@ -45,6 +45,22 @@ mack_creek_lengths <- mack_creek_vertebrates %>%
   ungroup()
 ```
 
+
+```{r}
+
+mack_creek_lengths <- mack_creek_vertebrates %>% 
+  clean_names() %>% 
+  select(year:sampledate) %>% 
+  filter(section == "CC") %>% 
+  mutate(across(where(is.character), tolower)) %>% 
+  drop_na(species) %>% 
+  group_by(species) %>% 
+  summarize(mean_length_cm = mean(length1, na.rm = TRUE),
+            sd_length_cm = sd(length1, na.rm = TRUE)) %>% 
+  ungroup()
+
+```
+
 ### reprex 2
 
 Identify what is causing the problem in the code below (there's only one thing). Then, create a very simple reprex that would help yourself, future you, or a colleague fix the problem. **Post your reprex as an issue in your own fork on GitHub.**
@@ -55,10 +71,11 @@ mack_creek_vertebrates %>%
   clean_names() %>% 
   filter(species == "ONCL") %>% 
   ggplot(aes(x = length1, y = weight)) +
-         geom_point(aes(shape = 12), color = "purple") +
+         geom_point(shape = 12, color = "purple") +
          theme_minimal() +
          labs(x = "Cutthroat trout length (cm)",
               y = "Weight (g)")
+
 ```
 
 ## End
